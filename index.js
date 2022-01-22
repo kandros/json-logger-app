@@ -6,14 +6,14 @@ process.on("SIGINT", function () {
   process.exit();
 });
 
-if (
-  typeof process.env.INTERVAL !== "undefined" &&
-  typeof INTERVAL !== "number"
-) {
-  throw new Error("process.env.INTERVAL must be a number");
+let INTERVAL = 500;
+if (typeof process.env.INTERVAL !== "undefined") {
+  try {
+    INTERVAL = parseInt(process.env.INTERVAL);
+  } catch (e) {
+    throw new Error("process.env.INTERVAL must be a number");
+  }
 }
-
-const INTERVAL = process.env.INTERVAL || 500;
 
 const logger = pino({});
 
