@@ -15,17 +15,37 @@ if (typeof process.env.INTERVAL !== "undefined") {
   }
 }
 
-const logger = pino({});
+const levels = ["trace", "debug", "info", "warn", "error"];
+
+let LOG_LEVEL = "info";
+
+if (typeof process.env.LOG_LEVEL !== "undefined") {
+  if (levels.includes(process.env.LOG_LEVEL)) {
+    LOG_LEVEL = process.env.LOG_LEVEL;
+  } else {
+    throw new Error(
+      "provided unknonw process.env.LOG_LEVEL must be one of " +
+        levels.join(", ")
+    );
+  }
+}
+
+const logger = pino({
+  prettyPrint: {
+    levelLabel: true,
+  },
+});
 
 logger.info(`
 Starting with settings:
-interal: ${INTERVAL}
+  INTERVAL: ${INTERVAL}
+  LOG_LEVEL: ${LOG_LEVEL}
 `);
 
 const hostname = os.hostname();
 
 function handler() {
-  logger.info({
+  logger[LOG_LEVEL]({
     hostname,
     ...obj,
   });
