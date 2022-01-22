@@ -31,9 +31,12 @@ if (typeof process.env.LOG_LEVEL !== "undefined") {
 }
 
 const logger = pino({
-  prettyPrint: {
-    levelLabel: true,
-  },
+  prettyPrint:
+    process.env.PRETTY === "true"
+      ? {
+          levelLabel: true,
+        }
+      : false,
 });
 
 logger.info(`
